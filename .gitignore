@@ -1,0 +1,17 @@
+uploads/
+reports/
+dataset/train.csv
+dataset/val.csv
+dataset/test.csv
+models/distilbert_fake_job/
+models/checkpoints/
+models/logs/
+*.safetensors
+*.bin
+__pycache__/
+*.pyc
+*.pkl
+.venv/
+*.tar
+.cache/
+huggingface/

@@ -1,0 +1,43 @@
+version: "3.9"
+
+# =====================================================
+# docker-compose.yml — Fake Job Detection System
+# Run:  docker-compose up --build
+# =====================================================
+
+services:
+
+  # ── FastAPI backend ──────────────────────────────
+  api:
+    build: .
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+      - ./datasets:/app/datasets
+      - ./uploads:/app/uploads
+      - ./reports:/app/reports
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Streamlit frontend ───────────────────────────
+  frontend:
+    build: .
+    command: streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./models:/app/models
+      - ./reports:/app/reports
+    depends_on:
+      - api
+    environment:
+      - API_HOST=api
+      - API_PORT=8000
