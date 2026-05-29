@@ -20,7 +20,7 @@ A production-ready AI system that classifies job postings as **Real** or **Fake*
 ## 🏗️ Project Structure
 
 ```
-fake-job-detector/
+fake_job/
 ├── backend/
 │   ├── main.py               # FastAPI app & endpoints
 │   └── report_generator.py   # PDF/CSV report generation
