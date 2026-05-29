@@ -10,11 +10,16 @@ from loguru import logger
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 
 from config import(
-PRETRAINED_MODEL,SAVED_MODEL_PATH,MAX_TOKEN_LENGTH,
-SUSPICIOUS_KEYWORDS,BERT_WEIGHT,HEURISTIC_WEIGHT,
-HIGH_SALARY_THRESHOLD,LOW_SALARY_THRESHOLD,LABEL_NAMES
+PRETRAINED_MODEL,
+HF_MODEL_NAME,
+MAX_TOKEN_LENGTH,
+SUSPICIOUS_KEYWORDS,
+BERT_WEIGHT,
+HEURISTIC_WEIGHT,
+HIGH_SALARY_THRESHOLD,
+LOW_SALARY_THRESHOLD,
+LABEL_NAMES
 )
-
 class HeuristicDetector:
 
     SALARY_RE=re.compile(
@@ -116,45 +121,29 @@ class BERTPredictor:
         self._load_model()
 
     def _load_model(self):
-        model_path=Path(SAVED_MODEL_PATH)
-
-        if model_path.exists() and(model_path/"config.json").exists():
-            try:
-                from transformers import(
-                    DistilBertForSequenceClassification,
-                    DistilBertTokenizerFast
-                )
-
-                self.tokenizer=DistilBertTokenizerFast.from_pretrained(SAVED_MODEL_PATH)
-                self.model=DistilBertForSequenceClassification.from_pretrained(SAVED_MODEL_PATH)
-                self.model.to(self.device)
-                self.model.eval()
-
-                logger.info(f"Fine-tuned model loaded from {SAVED_MODEL_PATH}")
-                return
-
-            except Exception as e:
-                logger.warning(f"Could not load fine-tuned model:{e}")
-
-        logger.warning(
-            "Fine-tuned model not found. Using raw DistilBERT."
-        )
-
         try:
-            from transformers import(
+            from transformers import (
                 DistilBertForSequenceClassification,
                 DistilBertTokenizerFast
             )
 
-            self.tokenizer=DistilBertTokenizerFast.from_pretrained(PRETRAINED_MODEL)
-            self.model=DistilBertForSequenceClassification.from_pretrained(
-                PRETRAINED_MODEL,num_labels=2
+            self.tokenizer = DistilBertTokenizerFast.from_pretrained(
+                HF_MODEL_NAME
             )
+
+            self.model = DistilBertForSequenceClassification.from_pretrained(
+                HF_MODEL_NAME
+            )
+
             self.model.to(self.device)
             self.model.eval()
 
+            logger.info(
+                f"Loaded model from Hugging Face: {HF_MODEL_NAME}"
+            )
+
         except Exception as e:
-            logger.error(f"Could not load any BERT model:{e}")
+            logger.error(f"Could not load model: {e}")
 
     def predict_proba(self,text:str)->float:
         if self.model is None or self.tokenizer is None:

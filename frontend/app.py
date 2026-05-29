@@ -1,3 +1,4 @@
+import os
 import sys
 import io
 import json
@@ -10,7 +11,10 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+ROOT_DIR = Path(__file__).resolve().parents[1]
+
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 # ─── Page config (must be first Streamlit call) ────
 st.set_page_config(

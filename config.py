@@ -12,7 +12,7 @@ for d in [MODEL_DIR,DATASET_DIR,UPLOAD_DIR,REPORT_DIR,EXPLAINABILITY_DIR]:
     d.mkdir(parents=True,exist_ok=True)
 
 PRETRAINED_MODEL="distilbert-base-uncased"
-SAVED_MODEL_PATH=str(MODEL_DIR/"distilbert_fake_job")
+# SAVED_MODEL_PATH=str(MODEL_DIR/"distilbert_fake_job")
 MAX_TOKEN_LENGTH=256
 NUM_LABELS=2
 LABEL_NAMES={0:"Real",1:"Fake"}
@@ -76,3 +76,5 @@ API_HOST=os.getenv("API_HOST","0.0.0.0")
 API_PORT=int(os.getenv("API_PORT",8000))
 
 STREAMLIT_PORT=int(os.getenv("STREAMLIT_PORT",8501))
+
+HF_MODEL_NAME = "anjipoo/fake_job_detector"
