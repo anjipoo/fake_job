@@ -55,8 +55,8 @@ fake-job-detector/
 ### 1. Clone & install
 
 ```bash
-git clone <repo>
-cd fake-job-detector
+git clone https://github.com/anjipoo/fake_job
+cd fake_job
 pip install -r requirements.txt
 ```
 
